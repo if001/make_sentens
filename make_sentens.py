@@ -22,14 +22,18 @@ class DataSet():
 
 
 class ReadFile():
-    def __init__(self): pass
-    def readfile(self,fname):
-        f = open(fname)
-        lines = f.readlines()
-        f.close()
+    def __init__(self):
+        self.input_wordlist = []
 
-        for line in lines:
-            print(line)
+    def readfile(self,fname):
+        try:
+            return open(fname)
+        except IOError:
+            print('cannot be opened.')
+
+        for word in f.read():
+            if word != "\n" :
+                self.intput_wordlist.append(word)
 
 
 class LstmNet():
@@ -51,5 +55,8 @@ def main():
     myfile = ReadFile()
     myfile.readfile("test.txt")
 
+
+
+    
 if __name__ == "__main__" :
     main()
