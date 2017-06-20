@@ -26,7 +26,7 @@ class DataSet():
 
     def setdata(self):
         wordlist = list("sあぁいぃうゔぅえぇおぉかがきぎくぐけげこごさざしじすずせぜそぞただちぢつづってでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもやゃゆゅよょらりるれろわゐゑをんー?!()「」、。,.・e")
-
+        print(wordlist)
         for value in wordlist:
             tlist = np.zeros(len(wordlist))
             tlist[wordlist.index(value)] = 1
@@ -80,32 +80,36 @@ class LstmNet():
             self.X_train.append(wordmap[input_wordlist[i]])
             self.Y_train.append(wordmap[input_wordlist[i+1]])
 
-
         self.X_train = np.array(self.X_train)
         self.Y_train = np.array(self.Y_train)
 
         self.X_train = self.X_train.reshape(len(self.X_train),len(self.X_train[0]),1)
         self.Y_train = self.Y_train.reshape(len(self.X_train),len(self.X_train[0]))
 
-
     def make_net(self):
-        self.model = Sequential()
-        self.model.add(LSTM(self.hidden_neurons, batch_input_shape=(None, self.length_of_sequences, self.in_out_neurons), return_sequences=False))
-        # self.model.add(Dense(self.hidden_neurons))
-        # self.model.add(Activation("relu"))
-        self.model.add(Dense(self.out_nerouns))
-        self.model.add(Dense(self.out_nerouns2))
-        self.model.add(Activation("softmax"))
+        model = Sequential()
+        model.add(LSTM(128, input_shape=(maxlen, 97))
+        model.add(Dense(97))
+        model.add(Activation('softmax'))
+
+        # self.model = Sequential()
+        # self.model.add(LSTM(self.hidden_neurons, batch_input_shape=(None, self.length_of_sequences, self.in_out_neurons), return_sequences=False))
+        # self.model.add(Dense(self.out_nerouns2))
+        # self.model.add(Activation("softmax"))
+        # self.model.add(Dense(self.out_nerouns))
+        # self.model.add(Dense(self.out_nerouns2))
+        # self.model.add(Activation("softmax"))
 
         loss = "mean_squared_error"
         loss = "binary_crossentropy"
         optimizer = "adam"
 
         self.model.compile(loss=loss, optimizer=optimizer)
-        # self.model.summary()
+        self.model.summary()
 
     def train(self):
-        self.history = self.model.fit(self.X_train, self.Y_train, batch_size=400, nb_epoch=3, validation_split=0.05)
+        self.history = self.model.fit(self.X_train, self.Y_train, batch_size=400, nb_epoch=1)
+        # self.history = self.model.fit(self.X_train, self.Y_train, batch_size=400, nb_epoch=1, validation_split=0.05)
 
     def score(self):
         score = self.model.evaluate(self.X_train, self.Y_train, verbose=0)
@@ -162,16 +166,13 @@ def make_sentens(mynet,mydata):
         if((sentens[-1] == "e") or (sentens[-1] == ".") or (sentens[-1] == "。")) :  break
 
     print(sentens)
-
     # print(tlist)
     # print(mydata.wordmap.values().index(tlist))
     # print(mydata.wordmap.keys()[mydata.wordmap.values().index(tlist)])
 
 
-
-
 def main():
-    flag = "l"
+    flag = "t"
     mydata = DataSet()
     mydata.setdata()
     wordlist_len = mydata.get_wordlist_len()
