@@ -2,11 +2,14 @@ import numpy as np
 arr1 = [1,2,3]
 arr1 = np.array(arr1)
 
-arr2 = [1,2,3]
+arr2 = ["a","b","c"]
 arr2 = np.array(arr2)
 
-print(arr1+arr2)
-print(np.r_[arr1, arr2])
+# print(arr1+arr2)
+# print(np.r_[arr1, arr2])
+
+
+
 
 # from keras.utils.data_utils import get_file
 # import numpy as np

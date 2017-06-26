@@ -1,6 +1,6 @@
 '''
 lstmを使って文章生成
-
+5-gramに変更
 batch_input_shape=(None,\
                    LSTMの中間層に入力するデータの数（※文書データなら単語の数）,\
                    LSTM中間層に投入するデータの次元数（※文書データなら１次元配列なので1)
@@ -18,7 +18,7 @@ import numpy.random as rand
 import random
 import sys
 
-from mecab_test import get_words_hinshi
+from mecab_test import get_words_to_katakana
 from mecab_test import kata_to_hira
 
 #import matplotlib.pyplot as plt
@@ -59,7 +59,7 @@ class ReadFile():
     def to_hiragana(self):
         self.hira_word_list = []
         for value in self.input_wordlist:
-            word_list = get_words_hinshi(value)
+            word_list = get_words_to_katakana(value)
             hira_word = kata_to_hira(word_list)
             for value in list(hira_word[0]):
                 self.hira_word_list.append(value)
@@ -78,13 +78,10 @@ class LstmNet():
         self.Y_train = []
 
     def make_train_data(self,wordmap,input_wordlist):
-        for i in range(len(input_wordlist)-3):
-            # print(input_wordlist[i])
-            # print(wordmap[input_wordlist[i]])
-            # self.X_train.append(wordmap[input_wordlist[i]])
-            # self.X_train.append(wordmap[input_wordlist[i]] + wordmap[input_wordlist[i+1]] + wordmap[input_wordlist[i+2]] )
-            self.X_train.append(np.r_[wordmap[input_wordlist[i]] ,wordmap[input_wordlist[i+1]],  wordmap[input_wordlist[i+2]] ])
-            self.Y_train.append(wordmap[input_wordlist[i+3]])
+        for i in range(len(input_wordlist)-5):
+            if (len(input_wordlist)>5):
+                self.X_train.append(np.r_[wordmap[input_wordlist[i]] ,wordmap[input_wordlist[i+1]],  wordmap[input_wordlist[i+2]], wordmap[input_wordlist[i+3]], wordmap[input_wordlist[i+4]] ])
+                self.Y_train.append(wordmap[input_wordlist[i+5]])
 
         self.X_train = np.array(self.X_train)
         self.Y_train = np.array(self.Y_train)
@@ -130,7 +127,7 @@ class LstmNet():
         print('test acc:', score[1])
 
 
-    def predict(self,st1,st2,st3,wordmap):
+    def predict(self,st1,st2,st3,st4,st5,wordmap):
         # sp = wordmap[st]
         # sp = np.array([sp])
         # sp = np.array([sp])
@@ -141,7 +138,7 @@ class LstmNet():
         # sp3 = wordmap[random.choice(wordlist)]
 
         sp = []
-        sp.append(np.r_[st1, st2, st3])
+        sp.append(np.r_[st1, st2, st3,st4,st5])
         sp = np.array([sp])
 
         sp = sp.reshape(1,1,len(self.X_train[0][0]))
@@ -188,17 +185,17 @@ class LstmNet():
 
 
 def make_sentens(mynet,mydata):
-    sentens = []
+    sentens = ""
 
     wordlist = list("sあぁいぃうゔぅえぇおぉかがきぎくぐけげこごさざしじすずせぜそぞただちぢつづってでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもやゃゆゅよょらりるれろわゐゑをんー?!()「」、。,.・e")
     wlist1 = mydata.wordmap["s"]
-    st2 = random.choice(wordlist)
-    wlist2 = mydata.wordmap[st2]
-    st3 = random.choice(wordlist)
-    wlist3 = mydata.wordmap[st3]
+    wlist2 = mydata.wordmap[random.choice(wordlist)]
+    wlist3 = mydata.wordmap[random.choice(wordlist)]
+    wlist4 = mydata.wordmap[random.choice(wordlist)]
+    wlist5 = mydata.wordmap[random.choice(wordlist)]
 
     while(True):
-        predict_list = mynet.predict(wlist1,wlist2,wlist3,mydata.wordmap)
+        predict_list = mynet.predict(wlist1,wlist2,wlist3,wlist4,wlist5,mydata.wordmap)
         x = rand.choice(len(predict_list[0]), 1, p=predict_list[0])
 
         # make list
@@ -211,11 +208,13 @@ def make_sentens(mynet,mydata):
             if (np.dot(value[1],outlist) == 1):
             # if(np.sum(value[1] - outlist) == 0 ):
                     outstr = value[0]
-                    sentens.append(outstr)
+                    sentens+=outstr
 
         wlist1 = wlist2
         wlist2 = wlist3
-        wlist3 = outlist
+        wlist3 = wlist4
+        wlist4 = wlist5
+        wlist5 = outlist
         if((sentens[-1] == "e") or (sentens[-1] == ".") or (sentens[-1] == "。")) :  break
 
     print(sentens)
