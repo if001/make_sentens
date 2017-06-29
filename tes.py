@@ -2,8 +2,8 @@ import numpy as np
 arr1 = [1,2,3]
 arr1 = np.array(arr1)
 
-arr2 = ["a","b","c"]
-arr2 = np.array(arr2)
+arr2 = {"a":1,"b":2,"c":3}
+print(len(arr2))
 
 # print(arr1+arr2)
 # print(np.r_[arr1, arr2])

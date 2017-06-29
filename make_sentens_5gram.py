@@ -215,7 +215,8 @@ def make_sentens(mynet,mydata):
         wlist3 = wlist4
         wlist4 = wlist5
         wlist5 = outlist
-        if((sentens[-1] == "e") or (sentens[-1] == ".") or (sentens[-1] == "。")) :  break
+        if(sentens[-1] == "e") :  break
+        # if((sentens[-1] == "e") or (sentens[-1] == ".") or (sentens[-1] == "。")) :  break
 
     print(sentens)
     # print(tlist)
@@ -260,14 +261,8 @@ def main():
     # 文章生成
     if (flag == "m") :
         mynet.wait_controller("l")
-        make_sentens(mynet,mydata)
-        make_sentens(mynet,mydata)
-        make_sentens(mynet,mydata)
-        make_sentens(mynet,mydata)
-        make_sentens(mynet,mydata)
-        make_sentens(mynet,mydata)
-        make_sentens(mynet,mydata)
-        make_sentens(mynet,mydata)
+        for i in range(10):
+            make_sentens(mynet,mydata)
 
 if __name__ == "__main__" :
     main()
