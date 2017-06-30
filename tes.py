@@ -1,3 +1,8 @@
+
+
+arr3 = [0] * 3
+print(arr3)
+
 import numpy as np
 arr1 = [1,2,3]
 arr1 = np.array(arr1)
@@ -5,11 +10,18 @@ arr1 = np.array(arr1)
 arr2 = {"a":1,"b":2,"c":3}
 print(len(arr2))
 
+
+print("index of 2:",np.where(arr1==2))
 # print(arr1+arr2)
 # print(np.r_[arr1, arr2])
 
+for i in range(1):
+    print(i)
 
-
+print(range(-1,1))
+for i in range(0,1):
+    print(i)
+print(1 in arr1)
 
 # from keras.utils.data_utils import get_file
 # import numpy as np

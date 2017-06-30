@@ -18,7 +18,9 @@ import numpy.random as rand
 import random
 import sys
 
-from mecab_test import get_words_hinshi
+
+from mecab_test import get_words_to_katakana
+#from mecab_test import get_words_hinshi
 from mecab_test import kata_to_hira
 
 #import matplotlib.pyplot as plt
@@ -59,7 +61,8 @@ class ReadFile():
     def to_hiragana(self):
         self.hira_word_list = []
         for value in self.input_wordlist:
-            word_list = get_words_hinshi(value)
+            word_list = get_words_to_katakana(value)
+            #word_list = get_words_hinshi(value)
             hira_word = kata_to_hira(word_list)
             for value in list(hira_word[0]):
                 self.hira_word_list.append(value)
