@@ -13,7 +13,6 @@ import re
 from tqdm import tqdm #プログレスバー
 
 
-
 #import pyximport; pyximport.install()
 #import makeTrainData
 
@@ -34,8 +33,9 @@ class TrainData():
             sys.exit(0)
 
     def make_dict(self):
+        print("make:dict")
         self.worddict = np.append(self.worddict,"")
-        for word in self.wordlists :
+        for word in tqdm(self.wordlists):
             if ( str(word) in self.worddict) == False :
                 self.worddict = np.append(self.worddict,word)
 
@@ -64,10 +64,7 @@ class Net():
         print("make one hot vector")
         print("wordlist length :",len(mydata.wordlists))
 
-        pbar = tqdm(total=len(mydata.wordlists)) #プログレスバー
-        for i in range(len(mydata.wordlists)):
-            pbar.update(i) #プログレスバー
-            #pbar.update(1/len(mydata.wordlists)) #プログレスバー
+        for i in tqdm(range(len(mydata.wordlists))):
             tmp_train_x = np.zeros(self.input_len)
             tmp_train_y = np.zeros(0)
 
@@ -122,19 +119,12 @@ class Net():
                                verbose=1,
                                validation_split=0.1)
 
-    def vec_to_word(self):
-        test = np.zeros(self.hidden_len)
-        # test = [ 0 for i in range(self.hidden_len) ]
-        # test[100] = 1
-        # test = test.reshape(1,200)
-        test = np.array([test])
-        test = test.reshape(1,200)
-
+    def vec_to_word(self,vec):
         from keras import backend as K
         hidden_layer_output = K.function([self.model.layers[2].input],
                                           [self.model.layers[3].output])
 
-        word_vec = hidden_layer_output([test])[0]
+        word_vec = hidden_layer_output([vec])[0]
         print(word_vec)
 
 
@@ -184,7 +174,11 @@ def main():
         mynet.wait_controller("l")
 
     if flag == "v" :
-        mynet.vec_to_word()
+        test = np.zeros(mynet.hidden_len)
+        test = np.array([test])
+        test = test.reshape(1,200)
+
+        mynet.vec_to_word(test)
 
 
 if __name__ == "__main__":

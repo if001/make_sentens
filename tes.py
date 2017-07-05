@@ -1,4 +1,6 @@
 
+st="hogehoge"
+print(len(st))
 
 arr3 = [0] * 3
 print(arr3)

@@ -101,6 +101,7 @@ class LstmNet():
         self.Y_train = self.Y_train.reshape(len(self.Y_train),len(self.Y_train[0]))
         print(self.X_train.shape)
 
+
     def make_net(self):
         self.model = Sequential()
         self.model.add(LSTM(self.hidden_neurons, input_shape=(1, len(self.X_train[0][0]))))
